@@ -1,0 +1,1158 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define pass 121
+#define subno 5
+
+
+void menu();
+
+void student();
+void teacher();
+void admin();
+
+void adminstudent();
+void adminteacher();
+
+void addstudent();
+void remstu();
+void viewstu();
+void update();
+void marks();
+void fee();
+void liststu();
+
+void addteach();
+void viewteach();
+void remteach();
+void updateteach();
+void updatesalary();
+void listteach();
+
+struct teach
+{
+    char name[20];
+    char address[50];
+    int day,month,year;
+    int age;
+    float salary;
+    float total;
+    float bal;
+    int emp_id;
+    int pas;
+};
+
+struct stu
+{
+    char name[20];
+    char address[50];
+    int age;
+    int day,month,year;
+    int cl;
+    int roll;
+    int admiss;
+    float sub[subno];
+    float fee;
+    float feepaid;
+    float bal;
+};
+
+
+
+int main()
+{
+    menu();
+}
+
+void menu()
+{
+
+        while(1)
+    {
+        int m;
+        system("cls");
+        printf("\n\n\t\t\t Welcome to Main Menu \n\n");
+        printf("\n\t1: Student \n\t2: Teacher \n\t3: Admin \n\t4: Exit \n\n");
+        printf("\n\t\tEnter your Choice : ");
+        scanf("%d",&m);
+        switch(m)
+        {
+        case 1 :
+            student();
+            break;
+        case 2 :    //calling of Student Detail
+            teacher();
+            break;
+        case 3 :    //calling of main menu
+            admin();
+            break;
+        case 4 :
+            exit(0);
+            break;
+        default :
+                    printf("\n\n\tXX    Invalid Choice      XX");
+                    break;
+        }
+    }
+
+}
+
+void student()
+{
+    int i=1;
+    while(i)
+    {
+        int w;
+        system("cls");
+        printf("\n\n\t\t\t Welcome to Student Menu \n\n");
+        printf("\n\t1: View Details \n\t2: Main Menu \n\t3: Exit \n\n");
+        printf("\n\t\tEnter your Choice : ");
+        scanf("%d",&w);
+        switch(w)
+        {
+        case 1 :  viewstu();  //calling of Student Detail
+            break;
+        case 2 :    //calling of main menu
+            i=0;
+            break;
+        case 3 :
+            exit(0);
+            break;
+        default :
+                    printf("\n\n\tXX    Invalid Choice      XX");
+                    break;
+        }
+    }
+
+}
+
+void teacher()
+{
+    int i=1;
+
+        int t;
+    struct teach view;
+
+        system("cls");
+        printf("\n\n\t\t\t Welcome to Teacher Menu \n\n");
+    char fname[10];
+    int id;
+    FILE *ptr;
+    printf("\nEnter the Employee ID : ");
+    scanf("%d",&id);
+
+    itoa(id,fname,10);
+
+    ptr=fopen(fname,"r");
+    if(ptr==NULL)
+    {
+        system("cls");
+        printf("\nRecord not Found");
+        getch();
+    }
+    else
+    {
+        system("cls");
+        int password;
+        fread(&view,sizeof(struct teach),1,ptr);
+        printf("\n\n\tEmployee ID :  %d\n\n\tEnter The Password : ",view.emp_id);
+        scanf("%d",&password);
+        if(password==view.pas)
+        {
+            while(i)
+        {
+        printf("\n\t1: View Details \n\t2: Update / Add Student Marks \n\t3: Main Menu \n\t4: Exit \n\n");
+        printf("\n\t\tEnter your Choice : ");
+        scanf("%d",&t);
+        switch(t)
+        {
+        case 1 :          printf("\n\tEmployee ID : %d \n\tPassword : %d ",view.emp_id,view.pas);
+                            printf("\n\tName : %s",view.name);
+                            printf("\n\tAddress : %s",view.address);
+                            printf("\n\tAge : %d \n\tDate of Birth : %d/%d/%d\n\n",view.age,view.day,view.month,view.year);
+                            printf("\n\n\n\n\t\tSalary Details \n\n\tTotal Salary : %0.2f\n\tSalary Paid : %0.2f \n\tBalance : %0.2f",view.total,view.salary,view.bal);
+                        //calling of Teacher Detail
+            break;
+        case 2 :     marks(); //calling Student marks
+            break;
+        case 3 :    //calling of main menu
+            i=0;
+            break;
+        case 4 :
+            exit(0);
+            break;
+        default :
+                    printf("\n\n\tXX    Invalid Choice      XX");
+                    break;
+        }
+    }
+    }
+}
+}
+
+void admin()
+{
+    int a;
+    float p;
+    printf("\n\n\n\tEnter The Password : ");
+    scanf("%f",&p);
+
+    if(pass==p)
+    {
+    while(1)
+    {
+        system("cls");
+        printf("\n\n\t\t\t Welcome to Admin Menu \n\n");
+        printf("\n\t1: For Student \n\t2: For Teacher \n\t3: Main Menu \n\t4: Exit \n\n");
+        printf("\n\t\tEnter your Choice : ");
+        scanf("%d",&a);
+        switch(a)
+        {
+        case 1 :
+                   adminstudent(); //calling of student admin menu
+            break;
+        case 2 :    adminteacher(); //calling of Teacher admin menu
+            break;
+        case 3 :    //calling of main menu
+            menu();
+            break;
+        case 4 :
+            exit(0);
+            break;
+        default :
+                    printf("\n\n\tXX    Invalid Choice      XX");
+                    break;
+        }
+    }
+    }
+     else
+    {
+        printf("\n\n\n\n\n\t\tWrong Password ");
+        getch();
+
+        //calling of main menu
+    }
+
+}
+
+void adminstudent()
+{
+    int i=1;
+    while(i)
+    {
+        int t;
+        system("cls");
+        printf("\n\n\t\t\t Welcome to Admin Student Menu \n\n");
+        printf("\n\t1: Add Student Details \n\t2: Update Student Details \n\t3: Delete Student Record\n\t4: View Specific Student Details \n\t5: Add/Modify Fee Payment\n\t6: Update / Add Student Marks \n\t7: List \n\t8: GO Back \n\n");
+        printf("\n\t\tEnter your Choice : ");
+        scanf("%d",&t);
+        switch(t)
+        {
+        case 1 :    addstudent();
+            break;
+        case 2 :    update();
+            break;
+        case 3 :    remstu();
+            break;
+        case 4:     viewstu();
+            break;
+        case 5:     fee();
+            break;
+        case 6 :    marks();
+            break;
+        case 7 :
+            liststu();
+            break;
+        case 8:
+            i=0;
+            break;
+        default :
+                    printf("\n\n\tXX    Invalid Choice      XX");
+                    break;
+        }
+    }
+
+}
+
+void adminteacher()
+{
+    int i=1;
+    while(i)
+    {
+        int t;
+        system("cls");
+        printf("\n\n\t\t\t Welcome to Admin Teacher Menu \n\n");
+        printf("\n\t1: Add Teacher Details \n\t2: Update Teacher Details \n\t3: Delete Teacher Record\n\t4: View Specific Teacher Details \n\t5: Add/Modify Salary Payment\n\t6: List\n\t7: Go Back \n\n");
+        printf("\n\t\tEnter your Choice : ");
+        scanf("%d",&t);
+        switch(t)
+        {
+        case 1 :    addteach();
+            break;
+        case 2 :    updateteach();
+            break;
+        case 3 :    remteach();
+            break;
+        case 4:     viewteach();
+            break;
+        case 5:     updatesalary();
+            break;
+        case 6:     listteach();
+            break;
+        case 7 :
+            i=0;
+            break;
+        default :
+                    printf("\n\n\tXX    Invalid Choice      XX");
+                    break;
+        }
+    }
+
+}
+
+
+void addstudent()
+{
+    struct stu add;
+    FILE *ptr,*fcheck,*clptr;
+
+    system("cls");
+
+    printf("\n Enter The Admission No : ");
+    scanf("%d",&add.admiss);
+    printf("\n Enter The Class : ");
+    scanf("%d",&add.cl);
+
+    add.roll=((add.cl*10000)+add.admiss);
+
+//int to character
+    char fname[10],clname[10];
+    itoa(add.roll,fname,10);
+    itoa(add.cl,clname,10);
+
+    fcheck=fopen(fname,"r");
+
+//for checking the file present or not
+    if(fcheck==NULL)
+    {
+        ptr=fopen(fname,"a");
+        clptr=fopen(clname,"a");
+        printf("\n Enter the Name : ");
+        fflush(stdin);
+        scanf("%[^\n]%*c",add.name);
+        printf("\n Enter the Address : ");
+        fflush(stdin);
+        scanf("%[^\n]%*c",add.address);
+    H1: printf("\n Enter The DOB(dd/mm/yyyy) : ");
+        scanf("%d/%d/%d",&add.day,&add.month,&add.year);
+            if(add.day>31||add.month>12)
+            {
+                printf("\n\nInvalid DOB");
+                goto H1;
+            }
+        printf("\n Enter The Age : ");
+        scanf("%d",&add.age);
+        for(int i=0;i<subno;i++)
+        {
+            add.sub[i]=0.0;
+        }
+        printf("\nEnter The Year Fee : ");
+        scanf("%f",&add.fee);
+        printf("\nEnter Fee Paid :");
+        scanf("%f",&add.feepaid);
+        add.bal=add.fee-add.feepaid;
+        printf("\n\n\tRoll No is %d",add.roll);
+
+        fwrite(&add,sizeof(struct stu),1,ptr);
+        fclose(ptr);
+        fprintf(clptr,"%d",add.roll);
+        fclose(clptr);
+        getch();
+    }
+    else
+    {
+        printf("Student Detail are Found ");
+        fclose(fcheck);
+        getch();
+    }
+}
+
+
+void remstu()
+{
+    char del[10],clname[10];
+    int rollno,cl;
+    FILE *clptr,*f1;
+    struct stu rem;
+    printf("\nEnter The Roll no : ");
+    scanf("%d",&rollno);
+    itoa(rollno,del,10);
+    cl=rollno/10000;
+    itoa(cl,clname,10);
+
+    if(remove(del)==0)
+    {
+        clptr=fopen(clname,"a");
+        f1=fopen("temp","a");
+        while(fscanf(clptr,"%d",&rem.roll)!=EOF)
+     {
+         if(rem.roll==rollno)
+        {
+            ;
+        }
+        else
+        {
+            fprintf(f1,"%d",rem.roll);
+        }
+    }
+        fclose(f1);
+        fclose(clptr);
+        remove(clname);
+        rename("temp",clname);
+        printf("\nRecord Delete Successfully");
+        getch();
+
+    }
+    else
+    {
+        printf("\n Record Is not Found");
+        getch();
+    }
+}
+
+
+void viewstu()
+{
+    char fname[10];
+    int roll;
+    FILE *ptr;
+
+    struct stu view;
+    printf("\nEnter the Roll NO : ");
+    scanf("%d",&roll);
+
+    itoa(roll,fname,10);
+
+    ptr=fopen(fname,"r");
+    if(ptr==NULL)
+    {
+        system("cls");
+        printf("\nRecord not Found");
+        getch();
+    }
+    else
+    {
+        system("cls");
+        fread(&view,sizeof(struct stu),1,ptr);
+        printf("\n\tRoll NO : %d \n\tAdmission No : %d ",roll,view.admiss);
+        printf("\n\tName : %s",view.name);
+        printf("\n\tAddress : %s",view.address);
+        printf("\n\tAge : %d \n\tDate of Birth : %d/%d/%d\n\tClass : %d\n\n\n\n\t\tMarks\n",view.age,view.day,view.month,view.year,view.cl);
+    //    printf()
+        for(int i=0;i<subno;i++)
+        {
+            printf("\n\tSub %d = %0.2f ",(i+1),view.sub[i]);
+        }
+        printf("\n\n\n\n\t\tFEE Details \n\n\tTotal Fee : %0.2f\n\tFee Paid : %0.2f \n\tBalance : %0.2f",view.fee,view.feepaid,view.bal);
+        fclose(ptr);
+        getch();
+    }
+}
+
+void update()
+{
+    char fname[10];
+    int roll;
+    FILE *ptr,*f;
+
+    struct stu upd;
+    printf("\nEnter the Roll NO : ");
+    scanf("%d",&roll);
+
+    itoa(roll,fname,10);
+
+    ptr=fopen(fname,"r");
+    if(ptr!=NULL)
+    {fread(&upd,sizeof(struct stu),1,ptr);
+
+    if(upd.roll==NULL)
+    {
+         printf("\nRecord not Found");
+        getch();
+    }
+    else
+    {
+
+        int q;
+       //system("cls");
+        printf("\n\n\t\t\tUpdate Student Detail Menu ");
+        printf("\n\n\t1. Change Name\n\t2. Change Address\n\t3. Change DOB and Age \n\t4. Go Back");
+        printf("\n\n\t\tEnter Your Choice : ");
+        scanf("%d",&q);
+
+        switch(q)
+        {
+        case 1 :
+            f=fopen("up","w");
+            system("cls");
+            printf("\n\t\t\tName Change");
+            printf("\n\n\tName : %s",upd.name);
+            printf("\n\n\tEnter The New Name : ");
+            fflush(stdin);
+            scanf("%[^\n]%*c",upd.name);
+            printf("\n\n\tNew Name : %s",upd.name);
+            fwrite(&upd,sizeof(struct stu),1,f);
+            fclose(f);
+            fclose(ptr);
+            remove(fname);
+            rename("up",fname);
+            getch();
+            break;
+        case 2 :
+            f=fopen("up","w");
+            system("cls");
+            printf("\n\t\t\tAddress Change");
+            printf("\n\n\tAddress : %s",upd.address);
+            printf("\n\n\tEnter The New Address : ");
+            fflush(stdin);
+            scanf("%[^\n]%*c",upd.address);
+            printf("\n\n\tNew Name : %s",upd.address);
+            fwrite(&upd,sizeof(struct stu),1,f);
+            fclose(f);
+            fclose(ptr);
+            remove(fname);
+            rename("up",fname);
+            getch();
+            break;
+        case 3 :
+            f=fopen("up","w");
+            system("cls");
+            printf("\n\t\t\tDOB and Age Change");
+            printf("\n\n\tDOB : %d/%d/%d \n\tAge : %d",upd.day,upd.month,upd.year,upd.age);
+            printf("\n\n\tEnter the DOB(dd/mm/yyyy) : ");
+            scanf("%d/%d/%d",&upd.day,&upd.month,&upd.year);
+
+            printf("\n\tEnter the Age : ");
+
+
+            scanf("%d",&upd.age);
+
+            printf("\n\n\tNew DOB : %d/%d/%d \n\tNew Age : %d",upd.day,upd.month,upd.year,upd.age);
+            fwrite(&upd,sizeof(struct stu),1,f);
+            fclose(f);
+            fclose(ptr);
+            remove(fname);
+            rename("up",fname);
+            getch();
+            break;
+
+        case 4:
+            break;
+        default:
+            printf("\n\n\t\tInvalid Choice ");
+            getch();
+            break;
+        }}
+    }
+    else
+
+        printf("\n\n\t\t\tNot Found");
+        getch();
+
+}
+
+
+void marks()
+{
+    char fname[10];
+    int roll;
+    FILE *ptr,*f;
+
+    struct stu mrk;
+    system("cls");
+    printf("\n\n\n\tEnter the Roll NO : ");
+    scanf("%d",&roll);
+
+    itoa(roll,fname,10);
+
+    ptr=fopen(fname,"rw");
+    fread(&mrk,sizeof(struct stu),1,ptr);
+    if(ptr==NULL)
+    {
+        printf("\n\n\t\t\tRecord not Found");
+        getch();
+    }
+    else
+    {
+    int a,i;
+    system("cls");
+    printf("\n\t\t\t\tMarks Menu");
+    printf("\n\n\t1. Specific Subject Marks Add/Update  \n\t2. Add All Subject Marks  ");
+    printf("\n\n\t\t Enter your Choice : ");
+    scanf("%d",&a);
+    switch(a)
+        {
+        case 1 :
+            f=fopen("up","w");
+            system("cls");
+            printf("\n\n\tThe Roll NO : %d",roll);
+            printf("\n\n\t\tCurrent Marks \n");
+            for(int j =0;j<subno;j++)
+            {
+            printf("\n\tSubject %d = %0.2f",j+1,mrk.sub[j]);
+            }
+            printf("\n\n\tEnter Subject NO : ");
+            scanf("%d",&i);
+            printf("\n\n\tEnter Marks : ");
+            scanf("%f",&mrk.sub[(i-1)]);
+            printf("\n\n\t\tUpdated Marks \n");
+            for(int j =0;j<subno;j++)
+            {
+            printf("\n\tSubject %d = %0.2f",j+1,mrk.sub[j]);
+            }
+            fwrite(&mrk,sizeof(struct stu),1,f);
+            fclose(f);
+            fclose(ptr);
+            remove(fname);
+            rename("up",fname);
+            getch();
+            break;
+        case 2 :
+             f=fopen("up","w");
+            printf("\n\n\tThe Roll NO : %d",roll);
+            printf("\n\n\t\tCurrent Marks \n");
+            for(int j =0;j<subno;j++)
+            {
+            printf("\n\t Subject %d = %0.2f",j+1,mrk.sub[j]);
+            }
+             printf("\n\n\tEnter Marks : ");
+             for(int j =0;j<subno;j++)
+            {
+            printf("\n Subject %d = ",(j+1));
+            scanf("%f",&mrk.sub[j]);
+            }
+            printf("\n\n\t\tUpdated Marks \n");
+            for(int j =0;j<subno;j++)
+            {
+            printf("\n Subject %d = %0.2f",j+1,mrk.sub[j]);
+            }
+            fwrite(&mrk,sizeof(struct stu),1,f);
+            fclose(f);
+            fclose(ptr);
+            remove(fname);
+            rename("up",fname);
+            getch();
+            break;
+        default:
+            printf("\n\n\t\tInvalid Choice");
+            getch();
+            break;
+        }
+    }
+}
+
+
+void fee()
+{
+    char fname[10];
+    int roll;
+    FILE *ptr,*f;
+
+    struct stu fe;
+    system("cls");
+    printf("\n\n\n\tEnter the Roll NO : ");
+    scanf("%d",&roll);
+
+    itoa(roll,fname,10);
+
+    ptr=fopen(fname,"rw");
+    fread(&fe,sizeof(struct stu),1,ptr);
+    if(ptr==NULL)
+    {
+        printf("\n\n\t\t\tRecord not Found");
+        getch();
+    }
+    else
+    {
+    int a;
+    float net;
+    system("cls");
+    printf("\n\t\t\t\tMarks Menu");
+    printf("\n\n\t1. Add Fee Paid \n\t2. Change Fee Paid \n\t2. Change Total Fee  ");
+    printf("\n\n\t\t Enter your Choice : ");
+    scanf("%d",&a);
+    switch(a)
+        {
+                case 1 :
+                    f=fopen("up","w");
+                    system("cls");
+                    printf("\n\n\tThe Roll NO : %d",roll);
+                    printf("\n\n\t\tTotal Fee : %0.2f",fe.fee);
+                    printf("\n\t\tFee Paid : %0.2f",fe.feepaid);
+                    printf("\n\t\tBalance : %0.2f",fe.bal);
+
+                    printf("\n\n\tEnter The New Fee Paid : ");
+                    scanf("%f",&net);
+                    fe.feepaid=fe.feepaid+net;
+                    fe.bal=fe.fee-fe.feepaid;
+                    printf("\n\n\t\tNew Fee Detail\n");
+                    printf("\n\n\t\tTotal Fee : %0.2f",fe.fee);
+                    printf("\n\t\tFee Paid : %0.2f",fe.feepaid);
+                    printf("\n\t\tBalance : %0.2f",fe.bal);
+
+                    fwrite(&fe,sizeof(struct stu),1,f);
+                    fclose(f);
+                    fclose(ptr);
+                    remove(fname);
+                    rename("up",fname);
+                    getch();
+                    break;
+                case 2 :
+                    f=fopen("up","w");
+                    system("cls");
+                    printf("\n\n\tThe Roll NO : %d",roll);
+                    printf("\n\n\t\tTotal Fee : %0.2f",fe.fee);
+                    printf("\n\t\tFee Paid : %0.2f",fe.feepaid);
+                    printf("\n\t\tBalance : %0.2f",fe.bal);
+
+                    printf("\n\n\tEnter The New Fee Paid : ");
+                    scanf("%f",&fe.feepaid);
+                    fe.bal=fe.fee-fe.feepaid;
+                    printf("\n\n\t\tNew Fee Detail");
+                    printf("\n\n\t\tTotal Fee : %0.2f",fe.fee);
+                    printf("\n\t\tFee Paid : %0.2f",fe.feepaid);
+                    printf("\n\t\tBalance : %0.2f",fe.bal);
+                    fwrite(&fe,sizeof(struct stu),1,f);
+                    fclose(f);
+                    fclose(ptr);
+                    remove(fname);
+                    rename("up",fname);
+                    getch();
+                    break;
+                 case 3 :
+                    f=fopen("up","w");
+                    system("cls");
+                    printf("\n\n\tThe Roll NO : %d",roll);
+                    printf("\n\n\t\tTotal Fee : %0.2f",fe.fee);
+                    printf("\n\t\tFee Paid : %0.2f",fe.feepaid);
+                    printf("\n\t\tBalance : %0.2f",fe.bal);
+
+                    printf("\n\n\tEnter The New Total Fee : ");
+                    scanf("%f",&fe.fee);
+                    fe.bal=fe.fee-fe.feepaid;
+                    printf("\n\n\t\tNew Fee Detail");
+                    printf("\n\n\t\tTotal Fee : %0.2f",fe.fee);
+                    printf("\n\t\tFee Paid : %0.2f",fe.feepaid);
+                    printf("\n\t\tBalance : %0.2f",fe.bal);
+                    fwrite(&fe,sizeof(struct stu),1,f);
+                    fclose(f);
+                    fclose(ptr);
+                    remove(fname);
+                    rename("up",fname);
+                    getch();
+                    break;
+                default:
+                    printf("\n\n\t\tInvalid Choice");
+                    getch();
+                    break;
+        }
+    }
+
+}
+
+
+void liststu()
+{
+        FILE *clptr,*f1;
+        char clname[10],fname[10];
+        int cl;
+
+        struct stu list,print;
+
+        printf("\n\n\n\tEnter The Class : ");
+        scanf("%d",&cl);
+        itoa(cl,clname,10);
+        clptr=fopen(clname,"r");
+        system("cls");
+        printf("Roll No\t\tName\t\t\tFee Paid\tBalance\n");
+        while(fscanf(clptr,"%d",&list.roll)!= EOF)
+        {
+            itoa(list.roll,fname,10);
+            f1=fopen(fname,"r");
+            fread(&print,sizeof(struct stu),1,f1);
+            printf("%d\t\t%s\t\t%0.2f\t\t%0.2f",print.roll,print.name,print.feepaid,print.bal);
+            printf("\n");
+            fclose(f1);
+        }
+        fclose(clptr);
+        getch();
+}
+
+
+void addteach()
+{
+    struct teach ad;
+    FILE *ptr,*fcheck,*f1;
+
+    system("cls");
+
+    printf("\n Enter The Employee ID : ");
+    scanf("%d",&ad.emp_id);
+
+//int to character
+    char fname[10];
+    itoa(ad.emp_id,fname,10);
+
+    fcheck=fopen(fname,"r");
+
+//for checking the file present or not
+    if(fcheck==NULL)
+    {
+        ptr=fopen(fname,"a");
+        printf("\n Enter the Name : ");
+        fflush(stdin);
+        scanf("%[^\n]%*c",ad.name);
+        printf("\n Enter the Address : ");
+        fflush(stdin);
+        scanf("%[^\n]%*c",ad.address);
+    H1: printf("\n Enter The DOB(dd/mm/yyyy) : ");
+        scanf("%d/%d/%d",&ad.day,&ad.month,&ad.year);
+            if(ad.day>31||ad.month>12)
+            {
+                printf("\n\nInvalid DOB");
+                goto H1;
+            }
+        printf("\n Enter The Age : ");
+        scanf("%d",&ad.age);
+        printf("\nEnter The Salary : ");
+        scanf("%f",&ad.total);
+        printf("\nEnter Salary Paid :");
+        scanf("%f",&ad.salary);
+        ad.bal=ad.total-ad.salary;
+        ad.pas=(ad.emp_id*10000)+ad.year+ad.age;
+        printf("\n\tPassword : %d",ad.pas);
+        f1=fopen("Teacher","a");
+        fprintf(f1,"%d",ad.emp_id);
+        fwrite(&ad,sizeof(struct teach),1,ptr);
+        fclose(ptr);
+        fclose(f1);
+        getch();
+    }
+    else
+    {
+        printf("Teacher Detail are Found ");
+        fclose(fcheck);
+        getch();
+    }
+}
+
+
+
+void viewteach()
+{
+    char fname[10];
+    int id;
+    FILE *ptr;
+
+    struct teach view;
+    printf("\nEnter the Employee ID : ");
+    scanf("%d",&id);
+
+    itoa(id,fname,10);
+
+    ptr=fopen(fname,"r");
+    if(ptr==NULL)
+    {
+        system("cls");
+        printf("\nRecord not Found");
+        getch();
+    }
+    else
+    {
+        system("cls");
+        fread(&view,sizeof(struct teach),1,ptr);
+        printf("\n\tEmployee ID : %d \n\tPassword : %d ",view.emp_id,view.pas);
+        printf("\n\tName : %s",view.name);
+        printf("\n\tAddress : %s",view.address);
+        printf("\n\tAge : %d \n\tDate of Birth : %d/%d/%d\n\n",view.age,view.day,view.month,view.year);
+        printf("\n\n\n\n\t\tSalary Details \n\n\tTotal Salary : %0.2f\n\tSalary Paid : %0.2f \n\tBalance : %0.2f",view.total,view.salary,view.bal);
+        fclose(ptr);
+        getch();
+    }
+}
+
+void remteach()
+{
+    char del[10];
+    int em;
+    FILE *f1,*f2;
+    struct teach rem;
+    printf("\nEnter The Employee ID : ");
+    scanf("%d",&em);
+    itoa(em,del,10);
+
+    if(remove(del)==0)
+    {
+        f1=fopen("Teacher","a");
+        f2=fopen("temp","a");
+        while(fscanf(f1,"%d",&rem.emp_id)!=EOF)
+        {
+            if(rem.emp_id==em)
+            {
+                ;
+            }
+            else
+            {
+                fprintf(f2,"%d",rem.emp_id);
+            }
+        }
+        fclose(f1);
+        fclose(f2);
+        remove("Teacher");
+        rename("temp","Teacher");
+        printf("\nRecord Delete Successfully");
+        getch();
+    }
+    else
+    {
+        printf("\n Record Is not Found");
+        getch();
+    }
+}
+
+void updateteach()
+{
+    char fname[10];
+    int id;
+    FILE *ptr,*f;
+
+    struct teach up;
+    printf("\nEnter the Employee Id : ");
+    scanf("%d",&id);
+
+    itoa(id,fname,10);
+
+    ptr=fopen(fname,"r");
+    if(ptr!=NULL)
+    {
+    fread(&up,sizeof(struct teach),1,ptr);
+    if(up.emp_id==NULL)
+    {
+         printf("\nRecord not Found");
+        getch();
+    }
+    else
+    {
+
+        int q;
+       system("cls");
+        printf("\n\n\t\t\tUpdate Teacher Detail Menu ");
+        printf("\n\n\t1. Change Name\n\t2. Change Address\n\t3. Change DOB and Age \n\t4. Go Back");
+        printf("\n\n\t\tEnter Your Choice : ");
+        scanf("%d",&q);
+
+        switch(q)
+        {
+        case 1 :
+            f=fopen("upd","w");
+            system("cls");
+            printf("\n\t\t\tName Change");
+            printf("\n\n\tName : %s",up.name);
+            printf("\n\n\tEnter The New Name : ");
+            fflush(stdin);
+            scanf("%[^\n]%*c",up.name);
+            printf("\n\n\tNew Name : %s",up.name);
+            fwrite(&up,sizeof(struct teach),1,f);
+            fclose(f);
+            fclose(ptr);
+            remove(fname);
+            rename("upd",fname);
+            getch();
+            break;
+        case 2 :
+            f=fopen("upd","w");
+            system("cls");
+            printf("\n\t\t\tAddress Change");
+            printf("\n\n\tAddress : %s",up.address);
+            printf("\n\n\tEnter The New Address : ");
+            fflush(stdin);
+            scanf("%[^\n]%*c",up.address);
+            printf("\n\n\tNew Name : %s",up.address);
+            fwrite(&up,sizeof(struct teach),1,f);
+            fclose(f);
+            fclose(ptr);
+            remove(fname);
+            rename("upd",fname);
+            getch();
+            break;
+        case 3 :
+            f=fopen("upd","w");
+            system("cls");
+            printf("\n\t\t\tDOB and Age Change");
+            printf("\n\n\tDOB : %d/%d/%d \n\tAge : %d",up.day,up.month,up.year,up.age);
+            printf("\n\n\tEnter the DOB(dd/mm/yyyy) : ");
+            scanf("%d/%d/%d",&up.day,&up.month,&up.year);
+
+            printf("\n\tEnter the Age : ");
+
+
+            scanf("%d",&up.age);
+
+            printf("\n\n\tNew DOB : %d/%d/%d \n\tNew Age : %d",up.day,up.month,up.year,up.age);
+            fwrite(&up,sizeof(struct teach),1,f);
+            fclose(f);
+            fclose(ptr);
+            remove(fname);
+            rename("upd",fname);
+            getch();
+            break;
+
+        case 4:
+            break;
+        default:
+            printf("\n\n\t\tInvalid Choice ");
+            getch();
+            break;
+        }
+    }
+    }
+    else
+        printf("\n\n\n\t\tNot Found");
+}
+
+
+void updatesalary()
+{
+    char fname[10];
+    int id;
+    FILE *ptr,*f;
+
+    struct teach sal;
+    system("cls");
+    printf("\n\n\n\tEnter the Employee ID : ");
+    scanf("%d",&id);
+
+    itoa(id,fname,10);
+
+    ptr=fopen(fname,"rw");
+    fread(&sal,sizeof(struct teach),1,ptr);
+    if(ptr==NULL)
+    {
+        printf("\n\n\t\t\tRecord not Found");
+        getch();
+    }
+    else
+    {
+    int a;
+    float net;
+    system("cls");
+    printf("\n\t\t\t\tSalary Menu");
+    printf("\n\n\t1. Add Salary Paid \n\t2. Change Total Salary  \n\t3. Change Salary Paid ");
+    printf("\n\n\t\t Enter your Choice : ");
+    scanf("%d",&a);
+    switch(a)
+        {
+                case 1 :
+                    f=fopen("up","w");
+                    system("cls");
+                    printf("\n\n\tThe Employee ID : %d",sal.emp_id);
+                    printf("\n\n\t\tTotal Salary : %0.2f",sal.total);
+                    printf("\n\t\tSalary Paid : %0.2f",sal.salary);
+                    printf("\n\t\tBalance : %0.2f",sal.bal);
+
+                    printf("\n\n\tEnter The New Salary Paid : ");
+                    scanf("%f",&net);
+                    sal.salary=sal.salary+net;
+                    sal.bal=sal.total-sal.salary;
+                    fwrite(&sal,sizeof(struct teach),1,f);
+                    printf("\n\n\t\tNew Salary Detail\n");
+                    printf("\n\n\t\tTotal Salary : %0.2f",sal.total);
+                    printf("\n\t\tSalary Paid : %0.2f",sal.salary);
+                    printf("\n\t\tBalance : %0.2f",sal.bal);
+
+                    fwrite(&sal,sizeof(struct teach),1,f);
+                    fclose(f);
+                    fclose(ptr);
+                    remove(fname);
+                    rename("up",fname);
+                    getch();
+                    break;
+                case 2 :
+                    f=fopen("up","w");
+                    system("cls");
+                    printf("\n\n\tThe Employee ID : %d",sal.emp_id);
+                    printf("\n\n\t\tTotal Salary : %0.2f",sal.total);
+                    printf("\n\t\tSalary Paid : %0.2f",sal.salary);
+                    printf("\n\t\tBalance : %0.2f",sal.bal);
+
+                    printf("\n\n\tEnter The New Salary  : ");
+                    scanf("%f",&sal.total);
+                    sal.bal=sal.total-sal.salary;
+                    fwrite(&sal,sizeof(struct teach),1,f);
+                    printf("\n\n\t\tNew Salary Detail\n");
+                    printf("\n\n\t\tTotal Salary : %0.2f",sal.total);
+                    printf("\n\t\tSalary Paid : %0.2f",sal.salary);
+                    printf("\n\t\tBalance : %0.2f",sal.bal);
+
+                    fwrite(&sal,sizeof(struct teach),1,f);
+                    fclose(f);
+                    fclose(ptr);
+                    remove(fname);
+                    rename("up",fname);
+                    getch();
+                    break;
+                 case 3 :
+                    f=fopen("up","w");
+                    system("cls");
+                    printf("\n\n\tThe Employee ID : %d",sal.emp_id);
+                    printf("\n\n\t\tTotal Salary : %0.2f",sal.total);
+                    printf("\n\t\tSalary Paid : %0.2f",sal.salary);
+                    printf("\n\t\tBalance : %0.2f",sal.bal);
+
+                    printf("\n\n\tEnter The New Salary Paid : ");
+                    scanf("%f",&sal.salary);
+                    sal.bal=sal.total-sal.salary;
+                    printf("\n\n\t\tNew Salary Detail\n");
+                    printf("\n\n\t\tTotal Salary : %0.2f",sal.total);
+                    printf("\n\t\tSalary Paid : %0.2f",sal.salary);
+                    printf("\n\t\tBalance : %0.2f",sal.bal);
+
+                    fwrite(&sal,sizeof(struct teach),1,f);
+                    fclose(f);
+                    fclose(ptr);
+                    remove(fname);
+                    rename("up",fname);
+                    getch();
+                    break;
+                default:
+                    printf("\n\n\t\tInvalid Choice");
+                    getch();
+                    break;
+        }
+    }
+
+}
+
+
+void listteach()
+{
+        FILE *clptr,*f1;
+        char fname[10];
+        struct teach t,pt;
+
+        clptr=fopen("Teacher","r");
+        system("cls");
+        printf("Emp ID\t\tName\t\t\tSalary Paid\t\tBalance\n");
+        while(fscanf(clptr,"%d",&pt.emp_id)!= EOF)
+        {
+            itoa(pt.emp_id,fname,10);
+            f1=fopen(fname,"r");
+            fread(&t,sizeof(struct stu),1,f1);
+            printf("%d\t\t%s\t\t%0.2f\t\t\t%0.2f",t.emp_id,t.name,t.salary,t.bal);
+            printf("\n");
+            fclose(f1);
+        }
+        fclose(clptr);
+        getch();
+}
+
