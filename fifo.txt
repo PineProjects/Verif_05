@@ -1,1 +1,166 @@
-Initial file for fifo project
+
+#include<iostream>
+using namespace std;
+
+int FRONT=-1, REAR=-1;
+uint32_t status = 0;
+
+void status_reg(int i)                  //Status register
+{
+    if(i == 1)
+        status = status + (1<<24);
+    if(i == 0)
+        status = status - (1<<24);
+}
+
+int PUSHOVR(int n)                      //Checking overflow
+{
+    if(FRONT == -1)
+        ++REAR;
+    if(FRONT < (n-1))
+    {
+        status &= ~(1 << 16);
+        return 1;
+    }
+    else
+    {
+        cout << "Array is full" << endl;
+        status |= (1 << 16);
+        return 0;
+    }
+}
+
+void PUSH(uint32_t arr[], int n)       //Push operation
+{
+    uint32_t DATAPUSH;
+    if(PUSHOVR(n))
+    {
+        cout << "Enter the value to be pushed" << endl;
+        cin >> DATAPUSH;
+        ++FRONT;
+        arr[FRONT] = DATAPUSH;
+        status_reg(1);
+    }
+}
+
+int POPUND()                            //Checking underflow
+{
+    if((REAR == -1) || (REAR > FRONT))
+    {
+        cout << "Array is Empty" << endl;
+        status |= (1 << 15);
+        return 0;
+    }
+    else
+    {
+        status &= ~(1 << 15);
+        return 1;
+    }
+}
+
+uint32_t POP(uint32_t arr[])            //POP operation
+{
+    uint32_t DATAPOP;
+    if(POPUND())
+    {
+        DATAPOP = arr[REAR];
+        ++REAR;
+        status_reg(0);
+        return DATAPOP;
+    }
+    else
+        return -1;
+}
+
+void flush(uint32_t arr[])              //Flush operation
+{
+    if(POPUND())
+    {
+        for(int i = REAR; i<=FRONT; i++)
+            arr[i] = '\0';
+        FRONT = REAR = -1;
+        arr[FRONT] = '\0';
+        cout << "FLUSH operation performed" << endl;
+        status = 0;
+    }
+}
+
+void display(uint32_t arr[])            //Display
+{
+    if(REAR == -1 || REAR > FRONT)
+    {
+        cout << "Array is empty" << endl;
+    }
+    else
+    {
+        for(int i=REAR;i<=FRONT;i++)
+        {
+            cout << arr[i] << " " << endl;
+        }
+    }
+
+    uint32_t temp = 520093696;
+    cout << "Status : " << ((status & temp) >> 24) << endl;
+}
+
+
+int main(void)
+{
+    uint32_t config, arr[10];
+    int choice;
+    cout << "Enter the configuration of FIFO" << endl;
+    cin >> config;
+    cout << "\tMenu:\n1)PUSH\n2)POP\n3)Change Configuration of FIFO operations\n4)Flush\n5)Display\n6)Exit" << endl;
+    while(1)
+    {
+        cout << "Enter your choice" << endl;
+        cin >> choice;
+        switch(choice)
+        {
+            case 1: cout << "You have chosen the push operation" << endl;
+                    if(1 & config)                                                  //Checking if FIFO operations are enabled
+                    {
+                        if((1<<3) & config)                                         //Checking if PUSH operation is enabled
+                        {
+                            PUSH(arr,10);
+                        }
+                        else
+                            cout << "Push is not enabled" << endl;
+                    }
+                    else
+                        cout << "FIFO is not enabled" << endl;
+                    break;
+            case 2: cout << "You have chosen the pop operation" << endl;
+                    if(1 & config)
+                    {
+                        if((1<<2) & config)
+                        {
+                            uint32_t DATAPOP = POP(arr);
+                            if(REAR == FRONT)
+                                cout << "No value to show" << endl;
+                            else
+                                cout << "Popped value is = " << DATAPOP << endl;
+                        }
+                        else
+                            cout << "Pop is not enabled" << endl;
+                    }
+                    else
+                        cout << "FIFO is not enabled" << endl;
+                    break;
+            case 3: cout << "Please enter the new configuration for FIFO operations" << endl;
+                    cin >> config;
+                    break;
+            case 4: cout << "You have selected the flush operation" << endl;
+                    flush(arr);
+                    break;
+            case 5: cout << "\nDisplaying..." << endl;
+                    fflush(stdin);
+                    display(arr);
+                    break;
+            case 6: exit(1);
+                    break;
+            default: cout << "Wrong choice" << endl;
+                     break;
+        }
+    }
+}
